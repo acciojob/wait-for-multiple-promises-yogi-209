@@ -1,38 +1,34 @@
-//your JS code here. If required.
 const output=document.getElementById("output");
-function createPromise(name){
-	const time=Math.random()*2+1;
-	return new Promise((resolve)=>{
-		setTimeout(()=>{
-			resolve({name,time});
-		},time*1000);
-	});
-}
 
-const startTime=performance.now();
+function createPromise(name){
+  const time = Math.random()*2+1;
+  return new Promise((resolve)=>{
+    setTimeout(()=>{
+      resolve({name,time});
+    },time*1000);
+  });
+}
 const p1=createPromise("Promise 1");
 const p2=createPromise("Promise 2");
 const p3=createPromise("Promise 3");
-
 Promise.all([p1,p2,p3]).then((results)=>{
-	const endTime=performance.now();
-	const totalTime=(endTime-startTime)/1000;
-	output.innerHTML="";
-
-	results.forEach((res)=>{
-		const row=document.getElementById("tr");
-		row.innerHTML=`
-		<td>${res.name}</td>
-		<td>${res.time.toFixed(3)}</td>`;
-		output.appendChild(row);
-	});
-
-	const totalRow = document.createElement("tr");
-	totalRow.innerHTML=`
-	<td>Total</td>
-	<td>${totalTime.toFixed(3)}</td>
-	`;
-	output.appendChild(totalRow);
+  output.innerHTML="";
+  let maxTime=0;
+  results.forEach((res)=>{
+    if(res.time>maxTime){
+      maxTime=res.time;
+    }
+    const row=document.createElement("tr");
+    row.innerHTML=`
+      <td>${res.name}</td>
+      <td>${res.time.toFixed(3)}</td>
+    `;
+    output.appendChild(row);
+  });
+  const totalRow=document.createElement("tr");
+  totalRow.innerHTML = `
+    <td>Total</td>
+    <td>${maxTime.toFixed(3)}</td>
+  `;
+  output.appendChild(totalRow);
 });
-
-
